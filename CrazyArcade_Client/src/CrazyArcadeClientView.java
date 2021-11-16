@@ -1,6 +1,6 @@
 
-// JavaObjClientView.java ObjecStram ±â¹İ Client
-//½ÇÁúÀûÀÎ Ã¤ÆÃ Ã¢
+// JavaObjClientView.java ObjecStram ê¸°ë°˜ Client
+//ì‹¤ì§ˆì ì¸ ì±„íŒ… ì°½
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.FileDialog;
@@ -57,8 +57,8 @@ public class CrazyArcadeClientView extends JFrame {
 	private JTextField txtInput;
 	private String UserName;
 	private JButton btnSend;
-	private static final int BUF_LEN = 128; // Windows Ã³·³ BUF_LEN À» Á¤ÀÇ
-	private Socket socket; // ¿¬°á¼ÒÄÏ
+	private static final int BUF_LEN = 128; // Windows ì²˜ëŸ¼ BUF_LEN ì„ ì •ì˜
+	private Socket socket; // ì—°ê²°ì†Œì¼“
 
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
@@ -75,7 +75,7 @@ public class CrazyArcadeClientView extends JFrame {
 	private JLabel lblMouseEvent;
 	private Graphics gc;
 	private int pen_size = 2; // minimum 2
-	// ±×·ÁÁø Image¸¦ º¸°üÇÏ´Â ¿ëµµ, paint() ÇÔ¼ö¿¡¼­ ÀÌ¿ëÇÑ´Ù.
+	// ê·¸ë ¤ì§„ Imageë¥¼ ë³´ê´€í•˜ëŠ” ìš©ë„, paint() í•¨ìˆ˜ì—ì„œ ì´ìš©í•œë‹¤.
 	private Image panelImage = null; 
 	private Graphics gc2 = null;
 	public JavaGameClientViewDrawing drawing;
@@ -83,6 +83,8 @@ public class CrazyArcadeClientView extends JFrame {
 	public JPanel gamePanel;
 	public Map map;
 	
+	private JButton startBtn;
+
 	/**
 	 * Create the frame.
 	 * @throws BadLocationException 
@@ -97,10 +99,20 @@ public class CrazyArcadeClientView extends JFrame {
 		contentPane.setLayout(null);
 		
 		gamePanel = new JPanel();
-		gamePanel.setBounds(26, 26, 760, 660);
+		gamePanel.setBounds(26, 26, 750, 650);
 		contentPane.add(gamePanel);
 		gamePanel.setLayout(new GridLayout(13, 15));
 		
+		startBtn = new JButton("start button");
+		startBtn.setBounds(900, 70, 120, 50);
+		startBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ChatMsg msg = new ChatMsg(UserName, "900", "Game Start");
+				SendObject(msg);
+			}
+		});
+		contentPane.add(startBtn);
+
 		map = new Map(gamePanel);
 
 		JScrollPane scrollPane = new JScrollPane();
@@ -109,7 +121,7 @@ public class CrazyArcadeClientView extends JFrame {
 		textArea = new JTextPane();
 		scrollPane.setViewportView(textArea);
 		textArea.setEditable(true);
-		textArea.setFont(new Font("±¼¸²Ã¼", Font.PLAIN, 14));
+		textArea.setFont(new Font("êµ´ë¦¼ì²´", Font.PLAIN, 14));
 
 		txtInput = new JTextField();
 		txtInput.setBounds(867, 626, 184, 40);
@@ -117,14 +129,14 @@ public class CrazyArcadeClientView extends JFrame {
 		txtInput.setColumns(10);
 
 		btnSend = new JButton("Send");
-		btnSend.setFont(new Font("±¼¸²", Font.PLAIN, 9));
+		btnSend.setFont(new Font("êµ´ë¦¼", Font.PLAIN, 9));
 		btnSend.setBounds(1063, 628, 57, 34);
 		contentPane.add(btnSend);
 
 		lblUserName = new JLabel("Name");
 		lblUserName.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblUserName.setBackground(Color.WHITE);
-		lblUserName.setFont(new Font("±¼¸²", Font.BOLD, 14));
+		lblUserName.setFont(new Font("êµ´ë¦¼", Font.BOLD, 14));
 		lblUserName.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUserName.setBounds(805, 676, 63, 36);
 		contentPane.add(lblUserName);
@@ -135,12 +147,12 @@ public class CrazyArcadeClientView extends JFrame {
 		lblUserName.setText(username);
 
 		imgBtn = new JButton("+");
-		imgBtn.setFont(new Font("±¼¸²", Font.PLAIN, 16));
+		imgBtn.setFont(new Font("êµ´ë¦¼", Font.PLAIN, 16));
 		imgBtn.setBounds(806, 626, 50, 40);
 		contentPane.add(imgBtn);
 
 		JButton btnExit = new JButton("\uC885\uB8CC");
-		btnExit.setFont(new Font("±¼¸²", Font.PLAIN, 9));
+		btnExit.setFont(new Font("êµ´ë¦¼", Font.PLAIN, 9));
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ChatMsg msg = new ChatMsg(UserName, "400", "Bye");
@@ -193,13 +205,13 @@ public class CrazyArcadeClientView extends JFrame {
 	}
 
 
-	// Server Message¸¦ ¼ö½ÅÇØ¼­ È­¸é¿¡ Ç¥½Ã
+	// Server Messageë¥¼ ìˆ˜ì‹ í•´ì„œ í™”ë©´ì— í‘œì‹œ
 	class ListenNetwork extends Thread {
 		public void run() {
 			while (true) {
 				try {
 
-					java.lang.Object obcm = null;
+					Object obcm = null;
 					String msg = null;
 					ChatMsg cm;
 					try {
@@ -219,43 +231,45 @@ public class CrazyArcadeClientView extends JFrame {
 					switch (cm.code) {
 					case "200": // chat message
 						if (cm.UserName.equals(UserName))
-							AppendTextR(msg); // ³» ¸Ş¼¼Áö´Â ¿ìÃø¿¡
+							AppendTextR(msg); // ë‚´ ë©”ì„¸ì§€ëŠ” ìš°ì¸¡ì—
 						else
 							AppendText(msg);
 						break;
-					case "300": // Image Ã·ºÎ
+					case "300": // Image ì²¨ë¶€
 						if (cm.UserName.equals(UserName))
 							AppendTextR("[" + cm.UserName + "]");
 						else
 							AppendText("[" + cm.UserName + "]");
 						AppendImage(cm.img);
 						break;
-					case "400": //°ÔÀÓ ÀÏ½ÃÁ¤Áö ¿äÃ»
+					case "400": //ê²Œì„ ì¼ì‹œì •ì§€ ìš”ì²­
 						break;
 					case "401":
 						break;
 					case "402":
 						break;
-					case "500": //°ÔÀÓ ½Â¸®
+					case "500": //ê²Œì„ ìŠ¹ë¦¬
 						break;
-					case "501": //°ÔÀÓ ÆĞ¹è
+					case "501": //ê²Œì„ íŒ¨ë°°
 						break;
-					case "502": //°ÔÀÓ ºñ±è
+					case "502": //ê²Œì„ ë¹„ê¹€
 						break;
-					case "600": //Ä³¸¯ÅÍ ÀÌµ¿
+					case "600": //ìºë¦­í„° ì´ë™
 						break;
-					case "700": //ÆøÅº ¼³Ä¡
+					case "700": //í­íƒ„ ì„¤ì¹˜
 						break;
-					case "800": //ÇÃ·¹ÀÌ¾î »ç»ì
+					case "800": //í”Œë ˆì´ì–´ ì‚¬ì‚´
 						break;
-					case "801": //ÇÃ·¹ÀÌ¾î »ç¸Á
+					case "801": //í”Œë ˆì´ì–´ ì‚¬ë§
 						break;
-					case "900": //¸Ê º¯µ¿
+					case "900": //ë§µ ë³€ë™
 						map.setMapInfo(cm.mapInfo);
 						map.mapPrint();
+						revalidate();
+						repaint();
 						break;					
 						
-					case "1000": // Mouse Event ¼ö½Å
+					case "1000": // Mouse Event ìˆ˜ì‹ 
 						drawing.DoMouseEvent(cm);
 						break;
 					}
@@ -271,19 +285,19 @@ public class CrazyArcadeClientView extends JFrame {
 						break;
 					} catch (Exception ee) {
 						break;
-					} // catch¹® ³¡
-				} // ¹Ù±ù catch¹®³¡
+					} // catchë¬¸ ë
+				} // ë°”ê¹¥ catchë¬¸ë
 
 			}
 		}
 	}
 
-	// Mouse Event ¼ö½Å Ã³¸®
+	// Mouse Event ìˆ˜ì‹  ì²˜ë¦¬
 	public void DoMouseEvent(ChatMsg cm) {
 		Color c;
-		if (cm.UserName.matches(UserName)) // º»ÀÎ °ÍÀº ÀÌ¹Ì Local ·Î ±×·È´Ù.
+		if (cm.UserName.matches(UserName)) // ë³¸ì¸ ê²ƒì€ ì´ë¯¸ Local ë¡œ ê·¸ë ¸ë‹¤.
 			return;
-		c = new Color(255, 0, 0); // ´Ù¸¥ »ç¶÷ °ÍÀº Red
+		c = new Color(255, 0, 0); // ë‹¤ë¥¸ ì‚¬ëŒ ê²ƒì€ Red
 		gc2.setColor(c);
 		gc2.fillOval(cm.mouse_e.getX() - pen_size/2, cm.mouse_e.getY() - cm.pen_size/2, cm.pen_size, cm.pen_size);
 		gc.drawImage(panelImage, 0, 0, panel);
@@ -300,7 +314,7 @@ public class CrazyArcadeClientView extends JFrame {
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
 			// TODO Auto-generated method stub
-			if (e.getWheelRotation() < 0) { // À§·Î ¿Ã¸®´Â °æ¿ì pen_size Áõ°¡
+			if (e.getWheelRotation() < 0) { // ìœ„ë¡œ ì˜¬ë¦¬ëŠ” ê²½ìš° pen_size ì¦ê°€
 				if (pen_size < 20)
 					pen_size++;
 			} else {
@@ -317,11 +331,11 @@ public class CrazyArcadeClientView extends JFrame {
 	class MyMouseEvent implements MouseListener, MouseMotionListener {
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			lblMouseEvent.setText(e.getButton() + " mouseDragged " + e.getX() + "," + e.getY());// ÁÂÇ¥Ãâ·Â°¡´É
+			lblMouseEvent.setText(e.getButton() + " mouseDragged " + e.getX() + "," + e.getY());// ì¢Œí‘œì¶œë ¥ê°€ëŠ¥
 			Color c = new Color(0,0,255);
 			gc2.setColor(c);
 			gc2.fillOval(e.getX()-pen_size/2, e.getY()-pen_size/2, pen_size, pen_size);
-			// panelImnage´Â paint()¿¡¼­ ÀÌ¿ëÇÑ´Ù.
+			// panelImnageëŠ” paint()ì—ì„œ ì´ìš©í•œë‹¤.
 			gc.drawImage(panelImage, 0, 0, panel);
 			SendMouseEvent(e);
 		}
@@ -364,24 +378,24 @@ public class CrazyArcadeClientView extends JFrame {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			lblMouseEvent.setText(e.getButton() + " mouseReleased " + e.getX() + "," + e.getY());
-			// µå·¡±×Áß ¸ØÃâ½Ã º¸ÀÓ
+			// ë“œë˜ê·¸ì¤‘ ë©ˆì¶œì‹œ ë³´ì„
 
 		}
 	}
 
-	// keyboard enter key Ä¡¸é ¼­¹ö·Î Àü¼Û
+	// keyboard enter key ì¹˜ë©´ ì„œë²„ë¡œ ì „ì†¡
 	class TextSendAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// Send buttonÀ» ´©¸£°Å³ª ¸Ş½ÃÁö ÀÔ·ÂÇÏ°í Enter key Ä¡¸é
+			// Send buttonì„ ëˆ„ë¥´ê±°ë‚˜ ë©”ì‹œì§€ ì…ë ¥í•˜ê³  Enter key ì¹˜ë©´
 			if (e.getSource() == btnSend || e.getSource() == txtInput) {
 				String msg = null;
 				// msg = String.format("[%s] %s\n", UserName, txtInput.getText());
 				msg = txtInput.getText();
 				SendMessage(msg);
-				txtInput.setText(""); // ¸Ş¼¼Áö¸¦ º¸³»°í ³ª¸é ¸Ş¼¼Áö ¾²´ÂÃ¢À» ºñ¿î´Ù.
-				txtInput.requestFocus(); // ¸Ş¼¼Áö¸¦ º¸³»°í Ä¿¼­¸¦ ´Ù½Ã ÅØ½ºÆ® ÇÊµå·Î À§Ä¡½ÃÅ²´Ù
-				if (msg.contains("/exit")) // Á¾·á Ã³¸®
+				txtInput.setText(""); // ë©”ì„¸ì§€ë¥¼ ë³´ë‚´ê³  ë‚˜ë©´ ë©”ì„¸ì§€ ì“°ëŠ”ì°½ì„ ë¹„ìš´ë‹¤.
+				txtInput.requestFocus(); // ë©”ì„¸ì§€ë¥¼ ë³´ë‚´ê³  ì»¤ì„œë¥¼ ë‹¤ì‹œ í…ìŠ¤íŠ¸ í•„ë“œë¡œ ìœ„ì¹˜ì‹œí‚¨ë‹¤
+				if (msg.contains("/exit")) // ì¢…ë£Œ ì²˜ë¦¬
 					System.exit(0);
 				
 				if(msg.equals("/print")) {
@@ -396,10 +410,10 @@ public class CrazyArcadeClientView extends JFrame {
 	class ImageSendAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// ¾×¼Ç ÀÌº¥Æ®°¡ sendBtnÀÏ¶§ ¶Ç´Â textField ¿¡¼¼ Enter key Ä¡¸é
+			// ì•¡ì…˜ ì´ë²¤íŠ¸ê°€ sendBtnì¼ë•Œ ë˜ëŠ” textField ì—ì„¸ Enter key ì¹˜ë©´
 			if (e.getSource() == imgBtn) {
-				frame = new Frame("ÀÌ¹ÌÁöÃ·ºÎ");
-				fd = new FileDialog(frame, "ÀÌ¹ÌÁö ¼±ÅÃ", FileDialog.LOAD);
+				frame = new Frame("ì´ë¯¸ì§€ì²¨ë¶€");
+				fd = new FileDialog(frame, "ì´ë¯¸ì§€ ì„ íƒ", FileDialog.LOAD);
 				// frame.setVisible(true);
 				// fd.setDirectory(".\\");
 				fd.setVisible(true);
@@ -419,18 +433,18 @@ public class CrazyArcadeClientView extends JFrame {
 
 	public void AppendIcon(ImageIcon icon) {
 		int len = textArea.getDocument().getLength();
-		// ³¡À¸·Î ÀÌµ¿
+		// ëìœ¼ë¡œ ì´ë™
 		textArea.setCaretPosition(len);
 		textArea.insertIcon(icon);
 	}
 
-	// È­¸é¿¡ Ãâ·Â
+	// í™”ë©´ì— ì¶œë ¥
 	public void AppendText(String msg) {
 		// textArea.append(msg + "\n");
 		// AppendIcon(icon1);
-		msg = msg.trim(); // ¾ÕµÚ blank¿Í \nÀ» Á¦°ÅÇÑ´Ù.
+		msg = msg.trim(); // ì•ë’¤ blankì™€ \nì„ ì œê±°í•œë‹¤.
 		int len = textArea.getDocument().getLength();
-		// ³¡À¸·Î ÀÌµ¿
+		// ëìœ¼ë¡œ ì´ë™
 		//textArea.setCaretPosition(len);
 		//textArea.replaceSelection(msg + "\n");
 		
@@ -450,9 +464,9 @@ public class CrazyArcadeClientView extends JFrame {
 
 
 	}
-	// È­¸é ¿ìÃø¿¡ Ãâ·Â
+	// í™”ë©´ ìš°ì¸¡ì— ì¶œë ¥
 	public void AppendTextR(String msg) {
-		msg = msg.trim(); // ¾ÕµÚ blank¿Í \nÀ» Á¦°ÅÇÑ´Ù.	
+		msg = msg.trim(); // ì•ë’¤ blankì™€ \nì„ ì œê±°í•œë‹¤.	
 		StyledDocument doc = textArea.getStyledDocument();
 		SimpleAttributeSet right = new SimpleAttributeSet();
 		StyleConstants.setAlignment(right, StyleConstants.ALIGN_RIGHT);
@@ -481,13 +495,13 @@ public class CrazyArcadeClientView extends JFrame {
 		double ratio;
 		width = ori_icon.getIconWidth();
 		height = ori_icon.getIconHeight();
-		// Image°¡ ³Ê¹« Å©¸é ÃÖ´ë °¡·Î ¶Ç´Â ¼¼·Î 200 ±âÁØÀ¸·Î Ãà¼Ò½ÃÅ²´Ù.
+		// Imageê°€ ë„ˆë¬´ í¬ë©´ ìµœëŒ€ ê°€ë¡œ ë˜ëŠ” ì„¸ë¡œ 200 ê¸°ì¤€ìœ¼ë¡œ ì¶•ì†Œì‹œí‚¨ë‹¤.
 		if (width > 200 || height > 200) {
-			if (width > height) { // °¡·Î »çÁø
+			if (width > height) { // ê°€ë¡œ ì‚¬ì§„
 				ratio = (double) height / width;
 				width = 200;
 				height = (int) (width * ratio);
-			} else { // ¼¼·Î »çÁø
+			} else { // ì„¸ë¡œ ì‚¬ì§„
 				ratio = (double) width / height;
 				height = 200;
 				width = (int) (height * ratio);
@@ -502,7 +516,7 @@ public class CrazyArcadeClientView extends JFrame {
 		len = textArea.getDocument().getLength();
 		textArea.setCaretPosition(len);
 		// ImageViewAction viewaction = new ImageViewAction();
-		// new_icon.addActionListener(viewaction); // ³»ºÎÅ¬·¡½º·Î ¾×¼Ç ¸®½º³Ê¸¦ »ó¼Ó¹ŞÀº Å¬·¡½º·Î
+		// new_icon.addActionListener(viewaction); // ë‚´ë¶€í´ë˜ìŠ¤ë¡œ ì•¡ì…˜ ë¦¬ìŠ¤ë„ˆë¥¼ ìƒì†ë°›ì€ í´ë˜ìŠ¤ë¡œ
 		// panelImage = ori_img.getScaledInstance(panel.getWidth(), panel.getHeight(), Image.SCALE_DEFAULT);
 
 		//gc2.drawImage(ori_img,  0,  0, panel.getWidth(), panel.getHeight(), panel);
@@ -510,7 +524,7 @@ public class CrazyArcadeClientView extends JFrame {
 		
 	}
 
-	// Windows Ã³·³ message Á¦¿ÜÇÑ ³ª¸ÓÁö ºÎºĞÀº NULL ·Î ¸¸µé±â À§ÇÑ ÇÔ¼ö
+	// Windows ì²˜ëŸ¼ message ì œì™¸í•œ ë‚˜ë¨¸ì§€ ë¶€ë¶„ì€ NULL ë¡œ ë§Œë“¤ê¸° ìœ„í•œ í•¨ìˆ˜
 	public byte[] MakePacket(String msg) {
 		byte[] packet = new byte[BUF_LEN];
 		byte[] bb = null;
@@ -529,7 +543,7 @@ public class CrazyArcadeClientView extends JFrame {
 		return packet;
 	}
 
-	// Server¿¡°Ô networkÀ¸·Î Àü¼Û
+	// Serverì—ê²Œ networkìœ¼ë¡œ ì „ì†¡
 	public void SendMessage(String msg) {
 		try {
 			// dos.writeUTF(msg);
@@ -555,11 +569,11 @@ public class CrazyArcadeClientView extends JFrame {
 		}
 	}
 
-	public void SendObject(Object ob) { // ¼­¹ö·Î ¸Ş¼¼Áö¸¦ º¸³»´Â ¸Ş¼Òµå
+	public void SendObject(Object ob) { // ì„œë²„ë¡œ ë©”ì„¸ì§€ë¥¼ ë³´ë‚´ëŠ” ë©”ì†Œë“œ
 		try {
 			oos.writeObject(ob);
 		} catch (IOException e) {
-			// textArea.append("¸Ş¼¼Áö ¼Û½Å ¿¡·¯!!\n");
+			// textArea.append("ë©”ì„¸ì§€ ì†¡ì‹  ì—ëŸ¬!!\n");
 			AppendText("SendObject Error");
 		}
 	}

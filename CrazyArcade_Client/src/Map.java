@@ -3,6 +3,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Vector;
+
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class Map {
@@ -15,10 +17,14 @@ public class Map {
 	}
 	public void setMapInfo(int [][] mapInfo) {
 		this.mapInfo = mapInfo; 
-		for(int i=0; i<mapInfo.length; i++) {
-			for(int j=0; j<mapInfo[i].length; j++) {
-				switch(mapInfo[i][j]) {
+	
+		for(int i=0; i<this.mapInfo.length; i++) {
+			for(int j=0; j<this.mapInfo[i].length; j++) {
+				switch(this.mapInfo[i][j]) {
 				case 0:
+				case 3:
+				case 4:
+				case 5:
 					objects[i][j] = (new Tile(j, i, 0, "Tile", gamePanel));
 					break;
 				case 1:

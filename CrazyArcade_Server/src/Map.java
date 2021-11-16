@@ -12,6 +12,7 @@ public class Map {
 		try {
 			int row = 0;
 			BufferedReader reader = new BufferedReader(new FileReader(path));
+			//BufferedReader reader = new BufferedReader(new FileReader("map_1.txt"));
 			String temp;
 			while((temp = reader.readLine()) != null) {
 				String [] temp_arr = temp.split(" ");
@@ -22,7 +23,6 @@ public class Map {
 			}
 			reader.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

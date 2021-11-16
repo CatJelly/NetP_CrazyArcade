@@ -1,5 +1,5 @@
 // JavaObjClient.java
-// ObjecStream ����ϴ� ä�� Client
+// ObjecStream 占쏙옙占쏙옙求占� 채占쏙옙 Client
 
 import java.awt.EventQueue;
 
@@ -92,7 +92,7 @@ public class CrazyArcadeClientMain extends JFrame {
 		txtIpAddress.addActionListener(action);
 		txtPortNumber.addActionListener(action);
 	}
-	class Myaction implements ActionListener // ����Ŭ������ �׼� �̺�Ʈ ó�� Ŭ����
+	class Myaction implements ActionListener // 占쏙옙占쏙옙클占쏙옙占쏙옙占쏙옙 占쌓쇽옙 占싱븝옙트 처占쏙옙 클占쏙옙占쏙옙
 	{
 		@Override
 		public void actionPerformed(ActionEvent e) {

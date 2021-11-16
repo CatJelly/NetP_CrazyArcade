@@ -1,6 +1,6 @@
 
-// JavaObjClientView.java ObjecStram ±â¹İ Client
-//½ÇÁúÀûÀÎ Ã¤ÆÃ Ã¢
+// JavaObjClientView.java ObjecStram ê¸°ë°˜ Client
+//ì‹¤ì§ˆì ì¸ ì±„íŒ… ì°½
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.FileDialog;
@@ -42,7 +42,7 @@ public class JavaGameClientViewDrawing extends JFrame {
 	private JLabel lblMouseEvent;
 	private Graphics gc;
 	private int pen_size = 2; // minimum 2
-	// ±×·ÁÁø Image¸¦ º¸°üÇÏ´Â ¿ëµµ, paint() ÇÔ¼ö¿¡¼­ ÀÌ¿ëÇÑ´Ù.
+	// ê·¸ë ¤ì§„ Imageë¥¼ ë³´ê´€í•˜ëŠ” ìš©ë„, paint() í•¨ìˆ˜ì—ì„œ ì´ìš©í•œë‹¤.
 	private Image panelImage = null; 
 	private Graphics gc2 = null;
 	public CrazyArcadeClientView mainview;
@@ -71,7 +71,7 @@ public class JavaGameClientViewDrawing extends JFrame {
 		contentPane.add(panel);
 		gc = panel.getGraphics();
 		
-		// Image ¿µ¿ª º¸°ü¿ë. paint() ¿¡¼­ ÀÌ¿ëÇÑ´Ù.
+		// Image ì˜ì—­ ë³´ê´€ìš©. paint() ì—ì„œ ì´ìš©í•œë‹¤.
 		panelImage = createImage(panel.getWidth(), panel.getHeight());
 		gc2 = panelImage.getGraphics();
 		gc2.setColor(panel.getBackground());
@@ -81,7 +81,7 @@ public class JavaGameClientViewDrawing extends JFrame {
 		
 		lblMouseEvent = new JLabel("<dynamic>");
 		lblMouseEvent.setHorizontalAlignment(SwingConstants.CENTER);
-		lblMouseEvent.setFont(new Font("±¼¸²", Font.BOLD, 14));
+		lblMouseEvent.setFont(new Font("êµ´ë¦¼", Font.BOLD, 14));
 		lblMouseEvent.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblMouseEvent.setBackground(Color.WHITE);
 		lblMouseEvent.setBounds(11, 539, 400, 40);
@@ -101,13 +101,13 @@ public class JavaGameClientViewDrawing extends JFrame {
 		double ratio;
 		width = ori_icon.getIconWidth();
 		height = ori_icon.getIconHeight();
-		// Image°¡ ³Ê¹« Å©¸é ÃÖ´ë °¡·Î ¶Ç´Â ¼¼·Î 200 ±âÁØÀ¸·Î Ãà¼Ò½ÃÅ²´Ù.
+		// Imageê°€ ë„ˆë¬´ í¬ë©´ ìµœëŒ€ ê°€ë¡œ ë˜ëŠ” ì„¸ë¡œ 200 ê¸°ì¤€ìœ¼ë¡œ ì¶•ì†Œì‹œí‚¨ë‹¤.
 		if (width > 200 || height > 200) {
-			if (width > height) { // °¡·Î »çÁø
+			if (width > height) { // ê°€ë¡œ ì‚¬ì§„
 				ratio = (double) height / width;
 				width = 200;
 				height = (int) (width * ratio);
-			} else { // ¼¼·Î »çÁø
+			} else { // ì„¸ë¡œ ì‚¬ì§„
 				ratio = (double) width / height;
 				height = 200;
 				width = (int) (height * ratio);
@@ -118,7 +118,7 @@ public class JavaGameClientViewDrawing extends JFrame {
 			new_img = ori_img;
 		}
 		// ImageViewAction viewaction = new ImageViewAction();
-		// new_icon.addActionListener(viewaction); // ³»ºÎÅ¬·¡½º·Î ¾×¼Ç ¸®½º³Ê¸¦ »ó¼Ó¹ŞÀº Å¬·¡½º·Î
+		// new_icon.addActionListener(viewaction); // ë‚´ë¶€í´ë˜ìŠ¤ë¡œ ì•¡ì…˜ ë¦¬ìŠ¤ë„ˆë¥¼ ìƒì†ë°›ì€ í´ë˜ìŠ¤ë¡œ
 		// panelImage = ori_img.getScaledInstance(panel.getWidth(), panel.getHeight(), Image.SCALE_DEFAULT);
 
 		gc2.drawImage(ori_img,  0,  0, panel.getWidth(), panel.getHeight(), panel);
@@ -126,17 +126,17 @@ public class JavaGameClientViewDrawing extends JFrame {
 	}
 	public void paint(Graphics g) {
 		super.paint(g);
-		// Image ¿µ¿ªÀÌ °¡·ÁÁ³´Ù ´Ù½Ã ³ªÅ¸³¯ ¶§ ±×·ÁÁØ´Ù.
+		// Image ì˜ì—­ì´ ê°€ë ¤ì¡Œë‹¤ ë‹¤ì‹œ ë‚˜íƒ€ë‚  ë•Œ ê·¸ë ¤ì¤€ë‹¤.
 		gc.drawImage(panelImage, 0, 0, this);
 	}
 	
 	
-	// Mouse Event ¼ö½Å Ã³¸®
+	// Mouse Event ìˆ˜ì‹  ì²˜ë¦¬
 	public void DoMouseEvent(ChatMsg cm) {
 		Color c;
-		if (cm.UserName.matches(UserName)) // º»ÀÎ °ÍÀº ÀÌ¹Ì Local ·Î ±×·È´Ù.
+		if (cm.UserName.matches(UserName)) // ë³¸ì¸ ê²ƒì€ ì´ë¯¸ Local ë¡œ ê·¸ë ¸ë‹¤.
 			return;
-		c = new Color(255, 0, 0); // ´Ù¸¥ »ç¶÷ °ÍÀº Red
+		c = new Color(255, 0, 0); // ë‹¤ë¥¸ ì‚¬ëŒ ê²ƒì€ Red
 		gc2.setColor(c);
 		gc2.fillOval(cm.mouse_e.getX() - pen_size/2, cm.mouse_e.getY() - cm.pen_size/2, cm.pen_size, cm.pen_size);
 		gc.drawImage(panelImage, 0, 0, panel);
@@ -153,7 +153,7 @@ public class JavaGameClientViewDrawing extends JFrame {
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
 			// TODO Auto-generated method stub
-			if (e.getWheelRotation() < 0) { // À§·Î ¿Ã¸®´Â °æ¿ì pen_size Áõ°¡
+			if (e.getWheelRotation() < 0) { // ìœ„ë¡œ ì˜¬ë¦¬ëŠ” ê²½ìš° pen_size ì¦ê°€
 				if (pen_size < 20)
 					pen_size++;
 			} else {
@@ -170,11 +170,11 @@ public class JavaGameClientViewDrawing extends JFrame {
 	class MyMouseEvent implements MouseListener, MouseMotionListener {
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			lblMouseEvent.setText(e.getButton() + " mouseDragged " + e.getX() + "," + e.getY());// ÁÂÇ¥Ãâ·Â°¡´É
+			lblMouseEvent.setText(e.getButton() + " mouseDragged " + e.getX() + "," + e.getY());// ì¢Œí‘œì¶œë ¥ê°€ëŠ¥
 			Color c = new Color(0,0,255);
 			gc2.setColor(c);
 			gc2.fillOval(e.getX()-pen_size/2, e.getY()-pen_size/2, pen_size, pen_size);
-			// panelImnage´Â paint()¿¡¼­ ÀÌ¿ëÇÑ´Ù.
+			// panelImnageëŠ” paint()ì—ì„œ ì´ìš©í•œë‹¤.
 			gc.drawImage(panelImage, 0, 0, panel);
 			SendMouseEvent(e);
 		}
@@ -217,7 +217,7 @@ public class JavaGameClientViewDrawing extends JFrame {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			lblMouseEvent.setText(e.getButton() + " mouseReleased " + e.getX() + "," + e.getY());
-			// µå·¡±×Áß ¸ØÃâ½Ã º¸ÀÓ
+			// ë“œë˜ê·¸ì¤‘ ë©ˆì¶œì‹œ ë³´ì„
 
 		}
 	}

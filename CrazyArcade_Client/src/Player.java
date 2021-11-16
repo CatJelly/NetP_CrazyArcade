@@ -11,6 +11,10 @@ public class Player extends MapObject {
 	private int bomb;
 	private int power;
 	private int speed;
+	private ImageIcon [] upImage = null;
+	private ImageIcon [] downImage = null;
+	private ImageIcon [] leftImage = null;
+	private ImageIcon [] rightImage = null;
 	
 	public Player(int xPos, int yPos, int code, String name, JPanel gamePanel) {
 		super(xPos, yPos, code, name, gamePanel);

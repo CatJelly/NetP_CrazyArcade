@@ -24,7 +24,6 @@ public abstract class MapObject {
 		return name;
 	}
 	public void printObject() {
-		gamePanel.add(new JLabel(name));
 		gamePanel.add(new JLabel(image));
 	}
 }
